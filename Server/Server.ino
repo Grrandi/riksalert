@@ -9,6 +9,20 @@ const char* password = "kissa123";
 ESP8266WebServer server(80);
 
 const int led = 13;
+const int statusLed = D6;
+
+// for led fade in and fade out
+int statusBrightness = 0;
+int fadeAmount = 5;
+
+// status led fade in fade out 
+unsigned long previousMillis = 0;
+long statusBlinkDelay = 40;
+
+// do not disturb timer in milliseconds
+const int dndTime = 10000;
+int dndTimeLeft = 0;
+int dndPreviousMillis = 0;
 
 void handleRoot() {
   digitalWrite(led, 1);
@@ -33,8 +47,19 @@ void handleNotFound(){
   digitalWrite(led, 0);
 }
 
+void blinkStatusLed() {
+  analogWrite(statusLed, statusBrightness);
+  statusBrightness = statusBrightness + fadeAmount;
+
+  // reverse the direction of the fading at the ends of the fade:
+  if (statusBrightness <= 0 || statusBrightness >= 255) {
+    fadeAmount = -fadeAmount;
+  }
+}
+
 void setup(void){
   pinMode(led, OUTPUT);
+  pinMode(statusLed, OUTPUT);
   digitalWrite(led, 0);
   Serial.begin(115200);
   WiFi.begin(ssid, password);
@@ -68,7 +93,15 @@ void setup(void){
 }
 
 void loop(void){
-  Serial.println("Foofaa");
+  unsigned long currentMillis = millis();
+    
   server.handleClient();
-  Serial.println("Hiihuu");
+
+  if (dndTimeLeft > 0) {
+    if(currentMillis - previousMillis > statusBlinkDelay) {
+      previousMillis = currentMillis;
+      blinkStatusLed();
+    }
+    dndTimeLeft = dndTimeLeft - min(dndTimeLeft, currentMillis);
+  }  
 }
