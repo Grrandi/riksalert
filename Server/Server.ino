@@ -35,17 +35,16 @@ void handleNotFound(){
   digitalWrite(led, 0);
 }
 
-
-
-
-
-
-
-
-
-
-
-
+void handleDisturb() {
+  String message = "<h1>RiksaLert Riksan hälytysjärjestelmä</h1>";
+  message += "<br>";
+  message += "Riksa on häiriöttömässä moodissa vielä: ";
+  message += _min(dndUntil, dndUntil - currentMillis);
+  message += "<br>";
+  message += "<button><a href=\"/disturb\">hälert!</button>";
+  message += "<br>";
+  server.send(200, "text/html", message);
+}
 
 void setup(void){
   pinMode(led, OUTPUT);
@@ -78,6 +77,8 @@ void setup(void){
   });
 
   server.onNotFound(handleNotFound);
+
+  server.on("/disturb", handleDisturb);
 
   server.begin();
   Serial.println("HTTP server started");
