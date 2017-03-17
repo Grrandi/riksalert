@@ -18,6 +18,11 @@ unsigned long dndUntil = 0;
 
 const int dndButton = D4;
 
+void setupDnd() {
+  Serial.println("setup dnd");
+  pinMode(statusLed, OUTPUT);
+  pinMode(dndButton, INPUT);
+}
 
 void blinkStatusLed() {
   analogWrite(statusLed, statusBrightness);
@@ -35,10 +40,7 @@ int isDnDActive() {
 
 void handleDoNotDisturb() {
   currentMillis = millis();
-  Serial.println("huha");
-  Serial.print(digitalRead(dndButton));
   if (!digitalRead(dndButton)) {
-    
     dndUntil = currentMillis + dndTime;
   }
   if (isDnDActive()) {

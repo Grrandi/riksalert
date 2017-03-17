@@ -10,9 +10,6 @@ const char* password = "kissa123";
 
 ESP8266WebServer server(80);
 
-const int led = 13;
-
-
 void handleRoot() {
   server.send(200, "text/plain", "hello from esp8266!");
 }
@@ -38,20 +35,24 @@ void handleDisturb() {
   message += "<br>";
   message += "Riksa on häiriöttömässä moodissa vielä: ";
   message += _min(dndUntil, dndUntil - currentMillis);
-  jessage += " ajanhetkeä";
+  message += " ajanhetkeä";
   message += "<br>";
   message += "<button><a href=\"/disturb\">hälert!</button>";
   message += "<br>";
+  if ( ! isDnDActive()) {
+    startDisturb();
+  }
   server.send(200, "text/html", message);
 }
 
 void setup(void){
-  pinMode(statusLed, OUTPUT);
-  pinMode(dndButton, INPUT);
   Serial.begin(115200);
-  WiFi.begin(ssid, password);
-  Serial.println("");
+  Serial.println("BEGIN");
 
+  setupDisturb();
+  setupDnd();
+
+  WiFi.begin(ssid, password);
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -82,11 +83,12 @@ void setup(void){
 }
 
 void loop(void){
-    
   server.handleClient();
   handleDoNotDisturb();
   if (isDnDActive) {
-    stopDisturb()
+    stopDisturb();
+  } else {
+    tickDisturb();
   }
-    
 }
+
