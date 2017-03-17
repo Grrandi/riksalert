@@ -1,5 +1,5 @@
 
-const int statusLed = D6;
+const int statusLed = 10;
 
 // for led fade in and fade out
 int statusBrightness = 0;
@@ -16,7 +16,7 @@ int dndPreviousMillis = 0;
 unsigned long currentMillis = 0;
 unsigned long dndUntil = 0;
 
-const int dndButton = D5;
+const int dndButton = 9;
 
 
 void blinkStatusLed() {
@@ -35,7 +35,10 @@ int isDnDActive() {
 
 void handleDoNotDisturb() {
   currentMillis = millis();
+  Serial.println("huha");
+  Serial.print(digitalRead(dndButton));
   if (!digitalRead(dndButton)) {
+    
     dndUntil = currentMillis + dndTime;
   }
   if (isDnDActive()) {

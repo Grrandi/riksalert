@@ -13,13 +13,11 @@ const int led = 13;
 
 
 void handleRoot() {
-  digitalWrite(led, 1);
   server.send(200, "text/plain", "hello from esp8266!");
-  digitalWrite(led, 0);
 }
 
 void handleNotFound(){
-  digitalWrite(led, 1);
+
   String message = "File Not Found\n\n";
   message += "URI: ";
   message += server.uri();
@@ -32,7 +30,6 @@ void handleNotFound(){
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
   server.send(404, "text/plain", message);
-  digitalWrite(led, 0);
 }
 
 void handleDisturb() {
@@ -47,10 +44,8 @@ void handleDisturb() {
 }
 
 void setup(void){
-  pinMode(led, OUTPUT);
   pinMode(statusLed, OUTPUT);
   pinMode(dndButton, INPUT);
-  digitalWrite(led, 0);
   Serial.begin(115200);
   WiFi.begin(ssid, password);
   Serial.println("");
@@ -88,5 +83,9 @@ void loop(void){
     
   server.handleClient();
   handleDoNotDisturb();
+  // if (isDnDActive) {
+    //stopDisturb()
+  //}
+  //startDisturb();
     
 }
