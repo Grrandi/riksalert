@@ -24,6 +24,9 @@ const int dndTime = 10000;
 int dndTimeLeft = 0;
 int dndPreviousMillis = 0;
 
+const int dndButton = D5;
+int isBusy = 0;
+
 void handleRoot() {
   digitalWrite(led, 1);
   server.send(200, "text/plain", "hello from esp8266!");
@@ -60,6 +63,7 @@ void blinkStatusLed() {
 void setup(void){
   pinMode(led, OUTPUT);
   pinMode(statusLed, OUTPUT);
+  pinMode(dndButton, INPUT);
   digitalWrite(led, 0);
   Serial.begin(115200);
   WiFi.begin(ssid, password);
@@ -96,12 +100,16 @@ void loop(void){
   unsigned long currentMillis = millis();
     
   server.handleClient();
-
+  handleDoNotDisturb();
+  if (digitalRead(dndButton)) {
+    dndTimeLeft = dndTime;
+  }
   if (dndTimeLeft > 0) {
     if(currentMillis - previousMillis > statusBlinkDelay) {
       previousMillis = currentMillis;
       blinkStatusLed();
     }
-    dndTimeLeft = dndTimeLeft - min(dndTimeLeft, currentMillis);
-  }  
+    dndTimeLeft = dndTimeLeft - _min(dndTimeLeft, currentMillis);
+  }
+    
 }
