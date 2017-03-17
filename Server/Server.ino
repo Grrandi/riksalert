@@ -40,7 +40,10 @@ void handleDisturb() {
   message += "<button><a href=\"/disturb\">hälert!</button>";
   message += "<br>";
   if ( ! isDnDActive()) {
+    Serial.println("Start halarm");
     startDisturb();
+  } else {
+    Serial.println("Prevent halarm");
   }
   server.send(200, "text/html", message);
 }
@@ -85,7 +88,7 @@ void setup(void){
 void loop(void){
   server.handleClient();
   handleDoNotDisturb();
-  if (isDnDActive) {
+  if (isDnDActive()) {
     stopDisturb();
   } else {
     tickDisturb();

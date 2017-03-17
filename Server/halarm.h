@@ -31,6 +31,7 @@ void setupDisturb() {
   pinMode(pinLatch, OUTPUT);
   pinMode(pinData, OUTPUT);  
   pinMode(pinClock, OUTPUT);
+  pinMode(pinServo, OUTPUT);
 }
 
 int shouldDisturb() {
