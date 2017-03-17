@@ -2,6 +2,7 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include "dnd.h"
 
 const char* ssid = "grrandifi";
 const char* password = "kissa123";
@@ -9,23 +10,7 @@ const char* password = "kissa123";
 ESP8266WebServer server(80);
 
 const int led = 13;
-const int statusLed = D6;
 
-// for led fade in and fade out
-int statusBrightness = 0;
-int fadeAmount = 5;
-
-// status led fade in fade out 
-unsigned long previousMillis = 0;
-long statusBlinkDelay = 40;
-
-// do not disturb timer in milliseconds
-const int dndTime = 10000;
-int dndTimeLeft = 0;
-int dndPreviousMillis = 0;
-
-const int dndButton = D5;
-int isBusy = 0;
 
 void handleRoot() {
   digitalWrite(led, 1);
@@ -50,15 +35,17 @@ void handleNotFound(){
   digitalWrite(led, 0);
 }
 
-void blinkStatusLed() {
-  analogWrite(statusLed, statusBrightness);
-  statusBrightness = statusBrightness + fadeAmount;
 
-  // reverse the direction of the fading at the ends of the fade:
-  if (statusBrightness <= 0 || statusBrightness >= 255) {
-    fadeAmount = -fadeAmount;
-  }
-}
+
+
+
+
+
+
+
+
+
+
 
 void setup(void){
   pinMode(led, OUTPUT);
@@ -97,19 +84,8 @@ void setup(void){
 }
 
 void loop(void){
-  unsigned long currentMillis = millis();
     
   server.handleClient();
   handleDoNotDisturb();
-  if (digitalRead(dndButton)) {
-    dndTimeLeft = dndTime;
-  }
-  if (dndTimeLeft > 0) {
-    if(currentMillis - previousMillis > statusBlinkDelay) {
-      previousMillis = currentMillis;
-      blinkStatusLed();
-    }
-    dndTimeLeft = dndTimeLeft - _min(dndTimeLeft, currentMillis);
-  }
     
 }
