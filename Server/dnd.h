@@ -1,5 +1,5 @@
 
-const int statusLed = 10;
+const int statusLed = D3;
 
 // for led fade in and fade out
 int statusBrightness = 0;
@@ -16,7 +16,7 @@ int dndPreviousMillis = 0;
 unsigned long currentMillis = 0;
 unsigned long dndUntil = 0;
 
-const int dndButton = 9;
+const int dndButton = D4;
 
 
 void blinkStatusLed() {
