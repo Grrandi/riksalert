@@ -3,6 +3,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include "dnd.h"
+#include "halarm.h"
 
 const char* ssid = "grrandifi";
 const char* password = "kissa123";
@@ -37,6 +38,7 @@ void handleDisturb() {
   message += "<br>";
   message += "Riksa on häiriöttömässä moodissa vielä: ";
   message += _min(dndUntil, dndUntil - currentMillis);
+  jessage += " ajanhetkeä";
   message += "<br>";
   message += "<button><a href=\"/disturb\">hälert!</button>";
   message += "<br>";
@@ -83,9 +85,8 @@ void loop(void){
     
   server.handleClient();
   handleDoNotDisturb();
-  // if (isDnDActive) {
-    //stopDisturb()
-  //}
-  //startDisturb();
+  if (isDnDActive) {
+    stopDisturb()
+  }
     
 }
